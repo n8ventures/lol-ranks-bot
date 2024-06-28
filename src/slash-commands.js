@@ -1,5 +1,5 @@
 const { REST } = require('@discordjs/rest')
-const { Routes } = require('discord-api-types/v9')
+const { Routes } = require('discord-api-types/v10')
 const i18n = require('i18n')
 
 class SlashCommands {
@@ -18,7 +18,7 @@ class SlashCommands {
   }
 
   async init() {
-    const rest = new REST({ version: '9' }).setToken(this.config.discordToken)
+    const rest = new REST({ version: '10' }).setToken(this.config.discordToken)
 
     for (const command of this.commands) {
       try {
