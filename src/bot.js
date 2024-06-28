@@ -35,7 +35,16 @@ const options = {
 }
 
 const client = new Discord.Client(options)
-client.login(config.discordToken)
+
+// Handle errors during login
+client
+  .login(config.discordToken)
+  .then(() => {
+    console.log('Bot logged in successfully')
+  })
+  .catch((error) => {
+    console.error('Failed to log in:', error)
+  })
 
 // Create empty players.json if it doesn't exist and write {}
 if (!fs.existsSync('./players.json')) {
@@ -65,4 +74,6 @@ db.defaults({ players: [] }).write()
 
   // Initialize event handlers
   new Events(client, db, limiter, config)
+
+  console.log('Event handlers initialized')
 })()

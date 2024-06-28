@@ -14,31 +14,38 @@ class Events {
     this.client = client
     this.apiHandler = ApiHandler.getInstance(this.config)
     this.dbHandler = DbHandler.getInstance(this.db)
-
     this.init()
   }
 
   init() {
+    console.log('Initializing events')
+
+    // This should be logged when the bot is fully ready
     this.client.once('ready', async () => {
       console.log('Ready!')
 
-      this.client.user.setActivity(this.config.status, { type: 'PLAYING' })
+      try {
+        this.client.user.setActivity(this.config.status, { type: 'PLAYING' })
 
-      // Init modules
-      const roles = new Roles(this.client, this.config)
-      await roles.init()
-      this.lolRanks = new LoLRanks(
-        this.client,
-        this.config,
-        this.db,
-        this.limiter,
-        roles
-      )
-      const slashCommands = new SlashCommands(
-        this.config,
-        this.client.application.id
-      )
-      await slashCommands.init()
+        // Init modules
+        const roles = new Roles(this.client, this.config)
+        await roles.init()
+        this.lolRanks = new LoLRanks(
+          this.client,
+          this.config,
+          this.db,
+          this.limiter,
+          roles
+        )
+        const slashCommands = new SlashCommands(
+          this.config,
+          this.client.application.id
+        )
+        await slashCommands.init()
+        console.log('Modules initialized successfully')
+      } catch (error) {
+        console.error('Error initializing modules:', error)
+      }
     })
 
     this.client.on('interactionCreate', async (interaction) => {
@@ -47,17 +54,20 @@ class Events {
         interaction.component.label === i18n.__('confirm')
       ) {
         const player = this.dbHandler.getPlayerByDiscordId(interaction.user.id)
-        const summonerData = await this.apiHandler.getSummonerDataByNameOrId({
+
+        const riotIdData = await this.apiHandler.getRiotId({
           value: player.summonerID,
           type: 'summonerID'
         })
-        const summonerName = summonerData.name
-        this.executeCommand(
-          'rank',
-          summonerName,
-          interaction,
-          i18n.__('confirm')
-        )
+
+        // const getSummonerPuuid = await this.apiHandler.getSummonerPuuid({
+        //   value: player.summonerEID,
+        //   type: 'summonerEID'
+        // })
+
+        const riotId = riotIdData.puuid
+
+        this.executeCommand('rank', riotId, interaction, i18n.__('confirm'))
       }
 
       if (interaction.isCommand() && interaction.commandName === 'rank') {
@@ -74,11 +84,7 @@ class Events {
   executeCommand(name, args, message, buttonText = null) {
     switch (name) {
     case 'rank':
-      this.rankCommand(
-        { value: args, type: 'summonerName' },
-        message,
-        buttonText
-      )
+      this.rankCommand({ value: args, type: 'riotId' }, message, buttonText)
       break
     default:
       break
