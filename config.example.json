@@ -35,6 +35,7 @@
     "Grandmaster": "Grand",
     "Challenger": "Chall"
   },
+  "regionWide": "europe",
   "region": "euw1",
   "timeZone": "Europe/Dublin",
   "language": "de",

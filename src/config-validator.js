@@ -42,6 +42,7 @@ class ConfigValidator {
           type: 'object',
           additionalProperties: { type: 'string' }
         },
+        regionWide: { type: 'string' },
         region: { type: 'string' },
         timeZone: { type: 'string', format: 'timezone' },
         language: { type: 'string' },
@@ -64,6 +65,7 @@ class ConfigValidator {
         'status',
         'ranks',
         'rankIconNames',
+        'regionWide',
         'region',
         'timeZone',
         'language',
