@@ -3,7 +3,7 @@
   "levelUp": " up to ",
   "levelDown": " fell to ",
   "rankCommandDescription": "Get your Solo Q elo assigned as a role.",
-  "rankCommandOptionName": "summoner-name",
+  "rankCommandOptionName": "riot-id",
   "rankCommandOptionDescription": "LoL-In-Game-Name",
   "reply1": "Your summoner name has been changed. I will reset your authentication now.",
   "reply2": "I verified your account and now I am getting your data.",

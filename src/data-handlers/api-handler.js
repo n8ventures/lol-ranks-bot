@@ -39,14 +39,32 @@ class ApiHandler {
     }
   }
 
-  async getSummonerDataByNameOrId(args) {
-    let summonerDataUrl = `https://${this.config.region}.api.riotgames.com/lol/summoner/v4/summoners/`
+  async getRiotId(args) {
+    let riotIDUrl = `https://${this.config.regionWide}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/`
+    let summonerDataUrl = `https://${this.config.region}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/`
+    let value
 
     switch (args.type) {
-    case 'summonerName':
-      summonerDataUrl += 'by-name/' + args.value
-      break
+    case 'riotId':
+      value = args.value.split('#')
+      riotIDUrl += value[0] + '/' + value[1]
+      return this.getData(riotIDUrl)
+    case 'player':
+      console.log('riotId - player CASE')
+      summonerDataUrl += args.value.summonerID
+      return this.getData(summonerDataUrl)
+    default:
+      throw new Error('Invalid type. Expected "riotId" or "player".')
+    }
+  }
+
+  async getSummonerPuuid(args) {
+    let summonerDataUrl = `https://${this.config.region}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/`
+    switch (args.type) {
     case 'summonerID':
+      summonerDataUrl += args.value
+      break
+    case 'riotId':
       summonerDataUrl += args.value
       break
     case 'player':

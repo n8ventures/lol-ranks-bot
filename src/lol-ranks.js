@@ -63,16 +63,34 @@ class LoLRanks {
       }
     }
 
-    let summonerData
+    let summonerData, summonerData2, summonerRankID
 
     try {
-      summonerData = await this.apiHandler.getSummonerDataByNameOrId(args)
+      summonerData = await this.apiHandler.getRiotId(args)
     } catch (error) {
       console.trace('Failed to get summoner data for ', args, error)
       return i18n.__('reply8')
     }
+    console.log('summonerData: ', summonerData)
+    const summonerID = summonerData.puuid
+    console.log(args)
+    if (args.type === 'riotId') {
+      console.log('lol-ranks: riotID')
+      try {
+        summonerData2 = await this.apiHandler.getSummonerPuuid({
+          value: summonerID,
+          type: 'riotId'
+        })
+      } catch (error) {
+        console.trace('Failed to get summoner puuid for ', args, error)
+        return i18n.__('reply8')
+      }
 
-    const summonerID = summonerData.id
+      summonerRankID = summonerData2.id
+    } else if (args.type === 'player') {
+      console.log('lol-ranks: player')
+      summonerRankID = summonerData.id
+    }
 
     const discordID =
       message?.author?.id ??
@@ -135,7 +153,7 @@ class LoLRanks {
 
       const rankData = await this.apiHandler.getRankedDataById(
         helpChannel,
-        summonerID
+        summonerRankID
       )
 
       let soloQueueRankData = null
