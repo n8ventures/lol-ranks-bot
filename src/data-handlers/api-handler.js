@@ -5,7 +5,7 @@ const i18n = require('i18n')
 class ApiHandler {
   constructor(config) {
     this.config = config
-    this.discordBaseURL = 'https://discord.com/api/v9'
+    this.discordBaseURL = 'https://discord.com/api/v10'
   }
 
   static getInstance(config = null) {
