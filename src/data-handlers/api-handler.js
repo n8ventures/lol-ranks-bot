@@ -32,6 +32,7 @@ class ApiHandler {
       return response
     } catch (error) {
       if (error.response && error.response.statusCode) {
+        console.log('Error URL: ', url)
         throw new Error(error.message + ' ' + error.response.statusCode)
       } else {
         throw new Error('Network error')
@@ -46,14 +47,25 @@ class ApiHandler {
 
     switch (args.type) {
     case 'riotId':
-      value = args.value.split('#')
-      riotIDUrl += value[0] + '/' + value[1]
-      return this.getData(riotIDUrl)
+      if (args.value.includes('#')) {
+        value = args.value.split('#')
+        riotIDUrl += value[0] + '/' + value[1]
+        return this.getData(riotIDUrl)
+      } else {
+        console.log('riotId - riotId CASE - verification')
+        summonerDataUrl += args.value
+        return this.getData(summonerDataUrl)
+      }
+    case 'summonerID':
+      console.log('riotId - summonerID CASE - verification')
+      summonerDataUrl += args.value
+      return this.getData(summonerDataUrl)
     case 'player':
       console.log('riotId - player CASE')
       summonerDataUrl += args.value.summonerID
       return this.getData(summonerDataUrl)
     default:
+      console.log('Invalid Type: ', args.type)
       throw new Error('Invalid type. Expected "riotId" or "player".')
     }
   }

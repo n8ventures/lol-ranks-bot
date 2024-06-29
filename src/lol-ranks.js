@@ -68,7 +68,7 @@ class LoLRanks {
     try {
       summonerData = await this.apiHandler.getRiotId(args)
     } catch (error) {
-      console.trace('Failed to get summoner data for ', args, error)
+      console.trace('Failed to get riotID data for ', args, error)
       return i18n.__('reply8')
     }
     console.log('summonerData: ', summonerData)
@@ -300,16 +300,16 @@ class LoLRanks {
     }
   }
 
-  lolAuth(auth, player, summonerData, discordID, reply, helpChannel) {
+  lolAuth(auth, player, summonerRankID, discordID, reply, helpChannel) {
     if (!auth && this.config.enableVerification) {
       try {
         if (!player.authCode) {
-          const authCode = summonerData.profileIconId
+          const authCode = summonerRankID.profileIconId
           this.dbHandler.updatePlayer(discordID, { authCode })
           throw new Error('Set auth code')
         }
 
-        if (summonerData.profileIconId !== player.authCode) {
+        if (summonerRankID.profileIconId !== player.authCode) {
           reply += i18n.__('reply2') + '\n\n'
           auth = true
           this.dbHandler.updatePlayer(discordID, {
