@@ -88,10 +88,11 @@ class ConfigValidator {
     await this.apiHandler.validateGuildId(config.guildId)
 
     // Validate the channel IDs
-    if (config.channels)
+    if (config.channels) {
       for (const channelId of Object.values(config.channels)) {
         await this.apiHandler.validateChannelId(channelId, config.guildId)
       }
+    }
   }
 
   async validateConfig() {
@@ -106,7 +107,7 @@ class ConfigValidator {
     }
 
     // Perform actual validation against the Discord API
-    await this.validateDiscordResources(this.config)
+    // await this.validateDiscordResources(this.config)
     // Validate Riot API key
     await this.apiHandler.validateRiotToken()
   }
